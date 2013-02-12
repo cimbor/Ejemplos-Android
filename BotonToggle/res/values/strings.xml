@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BotonToggle</string>
+    <string name="hello_world">Hola a todo el mundo.</string>
+    <string name="menu_settings">Settings</string>
+    <string name="nombre_color_rojo">rojo</string>
+    <string name="nombre_color_amarillo">amarillo</string>
+
+</resources>
