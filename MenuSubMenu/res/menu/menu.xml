@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/MnuOpc1"
+        android:icon="@android:drawable/arrow_up_float"
+        android:title="Opcion1">
+    </item>
+    <item
+        android:id="@+id/MnuOpc2"
+        android:icon="@android:drawable/arrow_down_float"
+        android:title="Opcion2">
+    </item>
+    <item
+        android:id="@+id/MnuOpc3"
+        android:icon="@android:drawable/btn_minus"
+        android:title="Opcion3"> 
+        <menu>
+            <item android:id="@+id/sub31" android:title="opcion 3-1" android:icon="@android:drawable/ic_lock_power_off"/>
+            <item android:id="@+id/sub32" android:title="opcion 3-2" android:icon="@android:drawable/ic_lock_silent_mode"/>
+        </menu> 
+    </item>
+
+</menu>
