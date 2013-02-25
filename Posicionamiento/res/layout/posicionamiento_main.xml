@@ -1,6 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/main_posicionamiento"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,8 +11,11 @@
     tools:context=".PosicionamientoMain" >
 
     <TextView
+        android:id="@+id/TextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:gravity="top|left"
         android:text="@string/etique_pos_actual" />
 
@@ -20,48 +23,57 @@
         android:id="@+id/etiq_latitud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/TextView1"
         android:clickable="false"
-        android:textIsSelectable="true"
         android:ems="10"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:longClickable="false" >
-
+        android:longClickable="false"
+        android:textIsSelectable="true" >
     </TextView>
 
     <TextView
         android:id="@+id/etiq_longitud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_latitud"
         android:clickable="false"
-        android:textIsSelectable="true"
         android:ems="10"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:textIsSelectable="true" />
 
     <TextView
         android:id="@+id/etiq_precision"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_longitud"
         android:clickable="false"
-        android:textIsSelectable="true"
         android:ems="10"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:textIsSelectable="true" />
 
     <TextView
         android:id="@+id/etiq_altura"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_precision"
         android:focusable="false"
-        android:textIsSelectable="true"
         android:focusableInTouchMode="false"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textIsSelectable="true" />
 
     <Button
         android:id="@+id/bot_activar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_altura"
         android:onClick="onClick"
         android:text="@string/acc_activar" />
 
@@ -69,23 +81,69 @@
         android:id="@+id/bot_parar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bot_activar"
         android:onClick="onClick"
         android:text="@string/acc_parar" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/etiq_estado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bot_parar"
         android:text="@string/texto_estado" />
 
     <TextView
         android:id="@+id/etiq_proveedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_estado"
         android:clickable="false"
-        android:textIsSelectable="true"
         android:ems="10"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:textIsSelectable="true" />
 
-</LinearLayout>
+    <ToggleButton
+        android:id="@+id/toggleGPS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etiq_proveedor"
+        android:clickable="false"
+        android:textOff="@string/GPS_OFF"
+        android:textOn="@string/GPS_ON" />
+
+    <ToggleButton
+        android:id="@+id/toggleNETWORK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/toggleGPS"
+        android:layout_alignBottom="@+id/toggleGPS"
+        android:layout_alignRight="@+id/etiq_proveedor"
+        android:clickable="false"
+        android:textOff="@string/Network_OFF"
+        android:textOn="@string/Network_ON" />
+
+    <Button
+        android:id="@+id/btn_opciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toggleGPS"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="18dp"
+        android:onClick="onClick"
+        android:text="@string/Opciones_localizacion" />
+
+    <TextView
+        android:id="@+id/etiq_hora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toggleGPS"
+        android:layout_toLeftOf="@+id/toggleNETWORK"
+        android:layout_toRightOf="@+id/toggleGPS" />
+
+</RelativeLayout>

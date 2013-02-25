@@ -7,5 +7,10 @@
     <string name="acc_activar">Activar</string>
     <string name="acc_parar">Parar</string>
     <string name="texto_estado">Estado del proveedor</string>
+    <string name="GPS_ON">GPS ON</string>
+    <string name="Network_ON">RED ON</string>
+    <string name="GPS_OFF">GPS OFF</string>
+    <string name="Network_OFF">NETWORK OFF</string>
+    <string name="Opciones_localizacion">OPCIONES LOCALIZACION</string>
 
 </resources>
