@@ -12,5 +12,7 @@
     <string name="GPS_OFF">GPS OFF</string>
     <string name="Network_OFF">NETWORK OFF</string>
     <string name="Opciones_localizacion">OPCIONES LOCALIZACION</string>
+    <string name="DATOS_ON">Internet disponible</string>
+    <string name="DATOS_OFF">Internet apagado</string>
 
 </resources>

@@ -87,14 +87,6 @@
         android:text="@string/acc_parar" />
 
     <TextView
-        android:id="@+id/etiq_estado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/bot_parar"
-        android:text="@string/texto_estado" />
-
-    <TextView
         android:id="@+id/etiq_proveedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -107,43 +99,66 @@
         android:textIsSelectable="true" />
 
     <ToggleButton
+        android:id="@+id/toggleNETWORK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/bot_parar"
+        android:layout_below="@+id/bot_parar"
+        android:clickable="false"
+        android:textOff="@string/Network_OFF"
+        android:textOn="@string/Network_ON" />
+
+    <ToggleButton
         android:id="@+id/toggleGPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/etiq_proveedor"
+        android:layout_alignLeft="@+id/bot_parar"
+        android:layout_below="@+id/bot_parar"
         android:clickable="false"
         android:textOff="@string/GPS_OFF"
         android:textOn="@string/GPS_ON" />
 
     <ToggleButton
-        android:id="@+id/toggleNETWORK"
+        android:id="@+id/toggleDatos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/toggleGPS"
-        android:layout_alignBottom="@+id/toggleGPS"
-        android:layout_alignRight="@+id/etiq_proveedor"
+        android:layout_below="@+id/toggleNETWORK"
+        android:layout_centerHorizontal="true"
         android:clickable="false"
-        android:textOff="@string/Network_OFF"
-        android:textOn="@string/Network_ON" />
+        android:textOff="@string/DATOS_OFF"
+        android:textOn="@string/DATOS_ON" />
 
     <Button
         android:id="@+id/btn_opciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toggleGPS"
+        android:layout_below="@+id/toggleDatos"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="18dp"
         android:onClick="onClick"
         android:text="@string/Opciones_localizacion" />
+
+    <TextView
+        android:id="@+id/etiq_estado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_opciones"
+        android:layout_toRightOf="@+id/toggleGPS"
+        android:text="@string/texto_estado" />
 
     <TextView
         android:id="@+id/etiq_hora"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toggleGPS"
-        android:layout_toLeftOf="@+id/toggleNETWORK"
-        android:layout_toRightOf="@+id/toggleGPS" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/etiq_direccion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/etiq_hora"
+        android:layout_alignLeft="@+id/etiq_hora"
+        android:layout_marginBottom="14dp"
+        android:text="Direccion" />
 
 </RelativeLayout>

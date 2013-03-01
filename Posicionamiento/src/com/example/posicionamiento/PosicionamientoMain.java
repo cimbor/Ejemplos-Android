@@ -1,25 +1,31 @@
 package com.example.posicionamiento;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 /**
@@ -37,6 +43,7 @@ import android.widget.ToggleButton;
 public class PosicionamientoMain extends Activity {
 	private ToggleButton btnGPS;
 	private ToggleButton btnNetwork;
+	private ToggleButton btnDatos;
 	private TextView lblLatitud;
 	private TextView lblLongitud;
 	private TextView lblPrecision;
@@ -44,6 +51,7 @@ public class PosicionamientoMain extends Activity {
 	private TextView lblProveedor;
 	private TextView lblAltura;
 	private TextView lblHora;
+	private TextView lblDireccion;
 	private final int SEGUNDOS_ACTUALIZACIONES = 1000 * 60 * 2; // Una medida se
 																// descarta
 																// cuando pase
@@ -62,11 +70,21 @@ public class PosicionamientoMain extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		ConnectivityManager gestorConectividad = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = gestorConectividad.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		boolean proveedorGPSActivado, proveedorNetworkActivado;
+		boolean hayWifi=false,hayDatosMobiles=false;
 		proveedorGPSActivado = gestorLocalizacion.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		proveedorNetworkActivado = gestorLocalizacion.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         this.btnNetwork.setChecked(proveedorNetworkActivado);
         this.btnGPS.setChecked(proveedorGPSActivado);
+        
+        hayWifi = networkInfo.isConnected();
+        if (!hayWifi) {
+        	networkInfo = gestorConectividad.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        	hayDatosMobiles = networkInfo.isConnected();
+        }
+		this.btnDatos.setChecked(hayDatosMobiles || hayWifi);
 	}
 	
 	@Override
@@ -81,17 +99,14 @@ public class PosicionamientoMain extends Activity {
 		lblProveedor = (TextView) findViewById(R.id.etiq_proveedor);
 		lblAltura = (TextView) findViewById(R.id.etiq_altura);
 		lblEstado = (TextView) findViewById(R.id.etiq_estado);
-		btnGPS = (ToggleButton) findViewById(R.id.toggleGPS);
+		btnGPS =  (ToggleButton) findViewById(R.id.toggleGPS);
 		lblHora = (TextView) findViewById(R.id.etiq_hora);
+		lblDireccion = (TextView) findViewById(R.id.etiq_direccion);
 		btnNetwork = (ToggleButton) findViewById(R.id.toggleNETWORK);
 		calendario= Calendar.getInstance();
-
+		btnDatos = (ToggleButton) findViewById(R.id.toggleDatos);
 		// Obtenemos una referencia al LocationManager del sistema
-		gestorLocalizacion = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
-
-		
-		
+		gestorLocalizacion = (LocationManager) getSystemService(Context.LOCATION_SERVICE);		
 		// Obtenemos la ultima posicion conocida
 		Location loc = gestorLocalizacion.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (loc == null)
@@ -120,7 +135,7 @@ public class PosicionamientoMain extends Activity {
 	 */
 	public void onClick(View v) {
 
-		if (v.getId() == R.id.bot_activar) {
+		if (v.getId() == R.id.bot_activar) {Log.e("POSICIONAMIENTO", "ACTIVAR");
 			// Nos registramos para recibir actualizaciones de la posicon
 			if (null==listenerLocalizacion)
 			   listenerLocalizacion = new listenerLocalizacion();
@@ -130,7 +145,7 @@ public class PosicionamientoMain extends Activity {
 			if (gestorLocalizacion.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
 				gestorLocalizacion.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SEGUNDOS_NETWORK,
 						METROS_NOTIFICACION_NETWORK, listenerLocalizacion);
-		} else if (v.getId() == R.id.bot_parar)
+		} else if (v.getId() == R.id.bot_parar && (null != listenerLocalizacion))
 			gestorLocalizacion.removeUpdates(listenerLocalizacion);
 		else if (v.getId() == R.id.btn_opciones) {
 			abrirAjustesLocalizacion();
@@ -150,21 +165,15 @@ public class PosicionamientoMain extends Activity {
 		if (loc != null) {
 			precision = loc.getAccuracy();
 			obtieneAltitud = loc.hasAltitude();
-			lblLatitud.setText("Latitud: "
-					+ String.format("%.3fº", loc.getLatitude()));
-			lblLongitud.setText("Longitud: "
-					+ String.format("%.3fº", loc.getLongitude()));
-			lblPrecision.setText("Precision: "
-					+ String.format("%.3f", precision) + " metros");
+			lblLatitud.setText("Latitud: "+ String.format("%.3fº", loc.getLatitude()));
+			lblLongitud.setText("Longitud: "+ String.format("%.3fº", loc.getLongitude()));
+			lblPrecision.setText("Precision: " + String.format("%.3f", precision) + " metros");
 			if (obtieneAltitud)
-				this.lblAltura.setText("Altura: "
-						+ String.format("%.3f", loc.getAltitude()));
+				this.lblAltura.setText("Altura: " + String.format("%.3f", loc.getAltitude()));
 			else
 				this.lblAltura.setText("Altura: No disponible");
 
-			Log.i("",
-					String.valueOf(loc.getLatitude() + " - "
-							+ String.valueOf(loc.getLongitude())));
+			Log.i("",String.valueOf(loc.getLatitude() + " - "+ String.valueOf(loc.getLongitude())));
 		} else {
 			lblLatitud.setText("Latitud: (sin_datos)");
 			lblLongitud.setText("Longitud: (sin_datos)");
@@ -182,8 +191,7 @@ public class PosicionamientoMain extends Activity {
 	 * tiempo(si es mucho mas nueva que la actual), la precisión y el origen de
 	 * la medida (GPS o redes GSM y WIFI)
 	 */
-	protected boolean posicionEsMejor(Location location,
-			Location currentBestLocation) {
+	protected boolean posicionEsMejor(Location location,Location currentBestLocation) {
 		if (currentBestLocation == null) {
 			// Si no tenemos aun ninguna medida la nueva sera siempre mejor
 			return true;
@@ -191,8 +199,7 @@ public class PosicionamientoMain extends Activity {
 
 		// Se mira si la medida es significativamente mas nueva o más vieja que
 		// la mejor conocida
-		long diferenciaMomentos = location.getTime()
-				- currentBestLocation.getTime();
+		long diferenciaMomentos = location.getTime()- currentBestLocation.getTime();
 		boolean esMuchoMasNueva = diferenciaMomentos > SEGUNDOS_ACTUALIZACIONES;
 		boolean esMuchoMasVieja = diferenciaMomentos < -SEGUNDOS_ACTUALIZACIONES;
 
@@ -266,8 +273,13 @@ public class PosicionamientoMain extends Activity {
 				lblProveedor.setText("Origen: " + location.getProvider());			
 				calendario.setTimeInMillis(location.getTime());
 				lblHora.setText("HORA: "+formatoFecha.format(calendario.getTime()));
-			//	}
-				
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		            // Since the geocoding API is synchronous and may take a while.  You don't want to lock
+		            // up the UI thread.  Invoking reverse geocoding in an AsyncTask.
+					ReverseGeocodingTask tareaFecha = new ReverseGeocodingTask(PosicionamientoMain.this);
+					tareaFecha.execute(location);
+				}
+
 			}
 		}
 
@@ -299,5 +311,62 @@ public class PosicionamientoMain extends Activity {
 				lblEstado.setText("Estado de " + provider + ": Temporalmente no disponible");
 		    	lblProveedor.setText(provider);
 		}
+	}
+	
+	
+	
+	
+	private class ReverseGeocodingTask extends AsyncTask<Location, String, Boolean> {
+	    Context mContext;
+
+	    public ReverseGeocodingTask(Context context) {
+	        super();
+	        mContext = context;
+	    }
+
+	    @Override
+	    protected Boolean doInBackground(Location... params) {
+	        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+	        Location loc = params[0];
+	        List<Address> addresses = null;
+	        
+	        try {
+	            // Call the synchronous getFromLocation() method by passing in the lat/long values.
+	            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            // Update UI field with the exception.
+	            this.publishProgress(e.toString());
+	         //   Message.obtain(mHandler, UPDATE_ADDRESS, e.toString()).sendToTarget();
+	        }
+	        if (addresses != null && !addresses.isEmpty()) {
+	            Address address = addresses.get(0);
+	            // Format the first line of address (if available), city, and country name.
+	            String addressText = String.format("%s, %s, %s",
+	            		address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+	                    address.getLocality(),
+	                    address.getCountryName());
+	            // Update the UI via a message handler.
+	            this.publishProgress(addressText);
+	          //  Message.obtain(mHandler, UPDATE_ADDRESS, addressText).sendToTarget();
+	        }
+	        return true;
+	    }
+	    @Override
+	    protected void onPostExecute(Boolean result) {
+	        if(result)
+	            Toast.makeText(PosicionamientoMain.this, "Dirección actualizada!",Toast.LENGTH_SHORT).show();
+	    }
+	    
+	    @Override
+	    protected void onProgressUpdate(String... direccion) {
+	 
+	        lblDireccion.setText(direccion[0]);
+	    }
+	    
+	    @Override
+	    protected void onCancelled() {
+	    	Toast.makeText(PosicionamientoMain.this, "Tarea cancelada!",Toast.LENGTH_SHORT).show();
+	    }
 	}
 }
